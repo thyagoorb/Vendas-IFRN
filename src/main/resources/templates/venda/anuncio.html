@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt" layout:decorate="~{layout}">
+
+<head>
+<meta charset="UTF-8">
+<!-- jQuery Autocomplete -->
+<link rel="stylesheet"
+	href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<link rel="stylesheet" href="/CSS/styles.css">
+<title>Anunciar Produto</title>
+
+<script>
+	$(function() {
+		$("#localizacao1").autocomplete({
+			source : "/vendas/autocompleteLocalizacoes",
+			minLength : 1,
+			select : function(event, ui) {
+				this.value = ui.item.label;
+				$("#idLocalizacao").val(ui.item.value);
+				return false;
+			}
+		});
+	});
+
+	$(function() {
+		$("#endereco").autocomplete({
+			source : "/vendas/autocompleteEnderecos",
+			minLength : 1,
+			select : function(event, ui) {
+				this.value = ui.item.label;
+				$("#idEndereco").val(ui.item.value);
+				return false;
+			}
+		});
+	});
+</script>
+
+</head>
+<body id="body-pd">
+
+	
+	<section layout:fragment="corpo">
+
+		<center>
+			<h1>PUBLICAR PRODUTO</h1>
+		</center>
+
+		<center>
+			<div class="col-md-4" th:if="${msgsErro} != null">
+				<ul class="list-group">
+					<li class="list-group-item list-group-item-danger"
+						style="list-style-type: none;" th:each="m : ${msgsErro}"><b
+						th:text="${m}" style="color: red;"></b> </br></li>
+				</ul>
+			</div>
+		</center>
+
+		</br> </br>
+
+		</div>
+
+		<div th:replace="fragments/mensagens"></div>
+
+		<div class="col-md-11"
+			style="display: block; margin-left: auto; margin-right: auto;">
+			<div id="publi-area">
+				<form th:action="@{/vendas/publicar}" th:object="${produto}"
+					enctype="multipart/form-data" method="post" class="row g-3"
+					style="background-color: #F5F5F5; border-radius: 20px;" novalidate>
+
+					<input type="hidden" th:field="${produto.id}" />
+
+					<div class="col-md-4">
+						<label for="validationCustom01" class="form-label">Nome do
+							Produto</label> <input type="text" th:field="${produto.nome}"
+							class="form-control" id="validationCustom01" value="" required>
+						<div class="valid-feedback"></div>
+					</div>
+
+					<div class="col-md-4">
+						<label for="validationCustom01" class="form-label">Valor
+							do Produto</label> <input type="text" placeholder="Selecione a operação"
+							onkeypress="$(this).mask('R$ #.##0,00', {reverse: true});"
+							th:field="${produto.preco}" class="form-control" id="otherlan"
+							name="otherLanguage" disabled="disabled" value="" required>
+						<div class="valid-feedback"></div>
+					</div>
+
+					<div class="col-md-4">
+						<label for="validationCustom01" class="form-label">Operação</label>
+						</br>
+						<div class="btn-group" role="group"
+							aria-label="Basic radio toggle button group">
+							<input type="radio" th:field="${produto.operacao}"
+								th:value="vender" class="btn-check" id="btnradio1"
+								name="subject" value="other" onclick="EnableDisableTB()"
+								autocomplete="off" > <label
+								class="btn btn-outline-primary" for="btnradio1">Vender</label> <input
+								type="radio" th:field="${produto.operacao}" th:value="doar"
+								class="btn-check" id="btnradio2" name="subject" value="hindi"
+								onclick="EnableDisableTB()" autocomplete="off"> <label
+								class="btn btn-outline-primary" for="btnradio2">Doar</label>
+
+						</div>
+					</div>
+
+					<div class="col-md-4">
+						<label for="disabledSelect" class="form-label">Categoria</label> <select
+							id="disabledSelect" class="form-select"
+							th:field="${produto.categoria}">
+							<option value="">Selecionar...</option>
+							<option th:each="c : ${categorias}" th:text="${c}"
+								th:value="${c}"></option>
+						</select>
+					</div>
+
+					<div class="col-md-4">
+						<label for="validationCustom01" class="form-label">WhatsApp
+							do Vendedor</label> <input type="text" maxlength="11"
+							th:field="${produto.contato}"
+							oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+							class="form-control" id="validationCustom01" value="" required>
+						<div class="valid-feedback"></div>
+					</div>
+
+					<div class="col-md-4">
+						<label for="localizacao" class="form-label">Localização</label> <input
+							id="localizacao1" th:field="${produto.localizacao.nome}"
+							placeholder="Ex: João Câmara" class="form-control" value="" required> <input
+							id="idLocalizacao" type="hidden"
+							th:field="${produto.localizacao.id}">
+						<div class="valid-feedback"></div>
+					</div>
+
+					<div class="col-md-4">
+						<label for="endereco" class="form-label">Endereço</label> <input
+							placeholder="Ex: Rua 17 de Setembro" class="form-control"
+							id="endereco" th:field="${produto.endereco.nome}" value="" required> <input
+							id="idEndereco" type="hidden" th:field="${produto.endereco.id}">
+						<input class="btn btn-outline-primary" type="submit"
+							formaction="/vendas/addEndereco" formmethod="post"
+							value="Adicionar Endereço">
+						<div class="valid-feedback"></div>
+					</div>
+
+
+					<div class="col-md-8">
+						<label for="exampleFormControlTextarea1" class="form-label">Descrição</label>
+						<textarea class="form-control" maxlength="300"
+							th:field="${produto.descricao}" id="exampleFormControlTextarea1"
+							rows="3"></textarea>
+					</div>
+
+					<div class="col-md-12">
+						<label for="formFileLg" class="form-label">Adicionar
+							Imagem</label> <input class="form-control form-control-lg"
+							id="formFileLg" th:name="file" type="file"> <input
+							th:field="${produto.foto.id}" type="hidden">
+
+					</div>
+
+					<div>
+						<input type="submit" class="btn btn-primary"
+							th:value="${produto.nome} == null ? Publicar : Editar">
+
+					</div>
+			</div>
+
+			<div
+				th:if="${produto.enderecos} != null 
+			and ${!produto.enderecos.empty}">
+				<table>
+					<caption>Endereços</caption>
+					<tr>
+						<th>Nome</th>
+						<th></th>
+					</tr>
+					<tr th:each="e : ${produto.enderecos}">
+						<td th:text="${e.nome}"></td>
+						<td><input type="submit" value="Remover"
+							th:formation="@{/vendas/removerEndereco} + ${e.id}"
+							formmethod="post"></td>
+					</tr>
+				</table>
+				<input type="hidden" th:each="f, itemStat : ${produto.enderecos}"
+					th:field="${produto.enderecos[__${itemStat.index}__].id}">
+				<input type="hidden" th:each="f, itemStat : ${produto.enderecos}"
+					th:field="${produto.enderecos[__${itemStat.index}__].nome}">
+			</div>
+			</form>
+		</div>
+
+		</div>
+
+		</br> </br>
+
+		<script type="text/javascript">
+			function EnableDisableTB() {
+				var btnradio1 = document.getElementById("btnradio1");
+				var otherlan = document.getElementById("otherlan");
+				otherlan.disabled = btnradio1.checked ? false : true;
+
+				if (!otherlan.disabled) {
+					otherlan.focus();
+				} else {
+					document.getElementById('otherlan').value = 'Doação';
+				}
+			}
+		</script>
+		
+		
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.15/jquery.mask.min.js"></script>
+		<script src="/JavaScript/main.js"></script>
+	
+	</section>
+
+
+</body>
+</html>

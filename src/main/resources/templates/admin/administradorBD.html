@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt"
+	layout:decorate="~{layout}">
+
+    <head>
+        <meta charset="UTF-8">
+        <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
+        <link rel="stylesheet" type="text/css" href="https://necolas.github.io/normalize.css/8.0.1/normalize.css">
+		<link rel="stylesheet" href="/CSS/main.css">
+        <link rel="stylesheet" href="/CSS/styles.css">
+     
+
+        <title>Administrador</title>
+    </head>
+    <body id="body-pd">
+    
+    	<section layout:fragment="corpo">
+
+        	<center>
+        <h1>Usuários Cadastrados</h1>
+  			</center>
+    
+    <main>
+    
+	<div class="col-md-12">
+	<nav class="navbar navbar-light bg-light">
+	  <div class="container-fluid">
+	    <button type="button" class="button blue mobile" id="cadastrarCliente" onclick="window.location.href='/usuarios/cadastro'"
+			style="margin: 10px;">Cadastrar um novo Usuário</button>
+	    <form class="d-flex" th:action="@{/usuarios/buscar}" method="get">
+	   		<input type="text" class="form-control me-2" th:name="nome" aria-label="Search" placeholder="Pesquise por Nome"/>
+	   		<input type="email" class="form-control me-2" th:name="email" aria-label="Search" placeholder="Pesquise por Email"/>
+	        <input class="btn btn-outline-success" type="submit" value="Buscar"/>
+	    </form>
+	  </div>
+	</nav>
+	</div>
+	
+	 <div class="records" th:if="${not #lists.isEmpty(usuariosEncontrados)}" >
+	
+	 	<table class="records">
+	 	
+	 	<thead>
+             	<tr>
+                    <th >Nome</th>
+                    <th >E-mail</th>
+                    <th >Telefone</th>
+                    <th >Curso</th>
+                    <th >Opções</th>
+                </tr>
+            </thead>
+            
+            <tbody>
+	 	
+	 			<tr th:each="u : ${usuariosEncontrados}">
+	 				<td th:text="${u.nome}"></td>
+	 				<td th:text="${u.email}"></td>
+	 				<td th:text="${u.telefone}"></td>
+	 				<td th:text="${u.curso}"></td>
+	 				
+
+	 				<td>
+	 				<a id="editar" th:href="'/usuarios/editar/' + ${u.id}">
+	 					<button type="button" class="button green">editar</button>
+	 				</a>
+	 				<a id="remover" th:href="'/usuarios/remover/' + ${u.id}" 
+	 					onclick="if(!confirm('Deseja realmente remover o usuário?')) return false;">
+	 					<button type="button" class="button red">excluir</button>
+	 				</a>
+	 				</td>
+	 			</tr>
+	 			
+	 			</tbody>
+	 			
+	 	</table>
+	 	
+	 	 </main>
+	 </div>
+ 
+        <script src="/JavaScript/main.js"></script>
+    	</section>
+        
+    </body>
+</html>

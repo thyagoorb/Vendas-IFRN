@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt"
+	layout:decorate="~{layout}">
+
+<head>
+
+<meta charset="UTF-8">
+<link rel="stylesheet" href="/CSS/styles.css">
+<title>Meus Anúncios</title>
+
+</head>
+<body id="body-pd">
+	
+<section layout:fragment="corpo">
+	<center>
+	<h1>SEUS PRODUTOS</h1>
+	
+	</br>
+
+	<div class="busc-items">
+		<form th:action="@{/vendas/buscar}" method="get">
+			<input type="text" style="width:70%; height:35px; border-radius:20px; outline:none; padding:10px; margin:5px;" th:name="nome"><input type="submit"
+				class=" btn btn-primary" value="buscar">
+		</form>
+	</div>
+	</br>
+</center>
+</br>
+	
+	 <div th:replace="fragments/mensagens"></div>
+	
+	<div th:if="${produtosMostrados} != null">
+		<div class="row row-cols-1 row-cols-md-3 g-4">
+			<div class="col" th:each="p : ${produtosMostrados}">
+				<div class="card">
+				
+							<img th:if="${p.foto != null}" th:src="@{/download/} + ${p.foto.id} + '?salvar=false'"
+								width="300px" height="300px" class="card-img-top" alt="..."/>
+								<img th:if="${p.foto == null}" src="../imagens/img.png" width="300px" height="300px" class="card-img-top" alt="..."/>
+							
+					<div class="card-body">
+
+						<h5 style="text-transform:uppercase;" class="card-title" th:text="${p.nome}"></h5>
+						</br>
+						<p class="card-text" th:text="'R$ '+${p.preco}"></p>
+						</br>
+						<p>
+							  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseExemple' + ${p.id}" aria-expanded="false" aria-controls="collapseExample">
+							     Ver Mais
+							  </button>
+							</p>
+							<div class="collapse" th:id="'collapseExemple' + ${p.id}">
+							  <div class="card card-body" width="300px" height="300px">
+							  	<b>Descrição:</b>
+							  	<p th:text="${p.descricao}"> </p>
+							  </div>
+							</div>
+						<a th:href="'/vendas/editar/'+${p.nome}" class="btn btn-primary">Editar</a> 
+						<a th:href="'/vendas/remover/'+${p.nome}" onclick="if (!confirm('Deseja remover o item?')) return false;"
+							class="btn btn-primary">Remover</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+
+	<script src="/JavaScript/main.js"></script>
+	
+	</section>
+</body>
+</html>

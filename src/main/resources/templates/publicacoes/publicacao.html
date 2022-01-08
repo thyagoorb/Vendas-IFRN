@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt"
+	layout:decorate="~{layout}">
+
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" href="/CSS/styles.css">
+<link rel="stylesheet" href="/CSS/css.css">
+<title>Publicações</title>
+
+</head>
+
+
+<body id="body-pd">
+
+
+		<section layout:fragment="corpo">
+		
+
+		<div class="topo">
+	
+				<div class="blog-container-cover">
+		        <div class="container-info-cover">
+		            <h1 >PRODUTOS ANUNCIADOS</h1>
+		        </div>
+		    </div>
+				<br/>
+					<div class="row">
+						<div class="col-12" >
+						
+						<!-- As a link -->
+							<nav class="navbar navbar-light bg-light" >
+							  <div class="container-fluid" >
+							    <a class="navbar-brand"  href="#">Categorias</a>
+							     
+							<input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao} +'\''" id="TODOS" name="categories" value="TODOS" checked>
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=HARDWARES} +'\''" id="HARDWARES" name="categories" value="HARDWARES">
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=LIVROS/CADERNOS} +'\''" id="LIVROS/CADERNOS" name="categories" value="LIVROS/CADERNOS">
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=MATERIAL ESCOLAR} +'\''" id="MATERIAL ESCOLAR" name="categories" value="MATERIAL ESCOLAR">
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=MOCHILAS} +'\''" id="MOCHILAS" name="categories" value="MOCHILAS">
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=NOTEBOOK/DESKTOP} +'\''" id="NOTEBOOK/DESKTOP" name="categories" value="NOTEBOOK/DESKTOP">
+					        <input type="radio" th:onclick="'window.location.href= \'' + @{/publicacao/filtrar?categoria=SOFTWARES} +'\''" id="SOFTWARES" name="categories" value="SOFTWARES">
+					
+					        <div class="container-category" >
+					            <label name="categoria" for="TODOS">TODOS</label>
+					            <label name="categoria" for="HARDWARES">HARDWARES</label>
+					            <label name="categoria" for="LIVROS/CADERNOS">LIVROS/CADERNOS</label>
+					            <label name="categoria" for="MATERIAL ESCOLAR">MATERIAL ESCOLAR</label>
+					            <label name="categoria" for="MOCHILAS">MOCHILAS</label>
+					            <label name="categoria" for="NOTEBOOK/DESKTOP">NOTEBOOK/DESKTOP</label>
+					            <label name="categoria" for="SOFTWARES">SOFTWARES</label>
+					        </div>
+							    
+							  </div>
+							</nav>
+
+					        <br/>
+						
+						<br/>       
+						</div>
+	<div th:if="${produtosMostrados} != null" >
+		<div class="row row-cols-1 row-cols-md-3 g-4" >
+			<div class="col" th:each="p : ${produtosMostrados}" >
+			
+			
+				<div class="card">
+				
+				
+					<img th:if="${p.foto != null}" th:src="@{/download/} + ${p.foto.id} + '?salvar=false'"
+								width="300px" height="300px" class="card-img-top" alt="..."/>
+					<img th:if="${p.foto == null}" src="../imagens/img.png" width="300px" height="300px" class="card-img-top" alt="..."/>
+					<div class="card-body" >
+						<h5 class="fs-2" th:text="${p.nome}"></h5>
+							</br>
+							<p class="fs-3" th:text="'R$ '+${p.preco}"></p>
+							</br> 
+							<p>
+							
+							<a th:href="'https://wa.me/'+${p.contato}" class="btn btn-primary">Entrar em Contato</a>
+							
+							  <button class="btn btn-primary" type="button" data-bs-toggle="collapse" th:data-bs-target="'#collapseExemple' + ${p.id}" aria-expanded="false" aria-controls="collapseExample">
+							     Ver Mais
+							  </button>
+							</p>
+							<div class="collapse" th:id="'collapseExemple' + ${p.id}">
+							  <div class="card card-body" width="300px" height="300px">
+							  	<b>Vendedor:</b>
+							  	<p th:text="${dados.nome}"></p>
+							  	
+							  	<b>Descrição:</b>
+							  	<p th:text="${p.descricao}"> </p>
+							  </div>
+							</div>						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
+<script src="/JavaScript/main.js"></script>
+</section>
+	
+</body>
+</html>

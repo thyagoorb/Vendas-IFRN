@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org"
+    xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cadastro</title>
+    
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="/CSS/cadastro.css">
+
+</head>
+
+<style>
+    body,
+    .container {
+        background-image: url(/imagens/fundoImg.jpg);
+    }
+</style>
+
+<body>
+
+    <div class="container" style="margin-top: 6vw;">
+
+        <div class="content first-content " id="item2">
+
+            <div class="first-column">
+                </br>
+                </br>
+                <h2 class="title title-welcome">Já possui cadastro?</h2>
+                <p class="description description-primary">Clique abaixo e entre com seu Login.</p>
+                <button id="signin" class="btn btn-primary">Login</button>
+            </div>
+            <div class="second-column">
+                </br>
+                <h2 class="title title-second">Cadastro</h2>
+                <br />
+                
+                <div th:replace="fragments/mensagens"></div>
+
+                <form th:action="@{/usuarios/salvar}" th:object="${usuario}" method="post" id='formulario'>
+
+                    <div id="errosCadastro" style="font-size: 14px;">
+
+                        <div th:if="${#fields.hasAnyErrors()}">
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" style="list-style-type: none;" th:each="error : ${#fields.detailedErrors()}">
+                                    <b th:text="${error.message}" style="color: red;"></b>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div th:if="${msgsErro} != null">
+                            <ul class="list-group">
+                                <li class="list-group-item list-group-item-danger" style="list-style-type: none;" th:each="m : ${msgsErro}">
+                                    <b th:text="${m}" style="color: red;"></b>
+                                </li>
+                            </ul>
+                        </div>
+
+                    </div>
+
+                    <input type="hidden" th:field="${usuario.id}" />
+
+                    <div>
+                        <input type="text" th:field="${usuario.nome}" placeholder="Insira o Nome">
+                    </div>
+
+                    <div>
+                        <input type="email" th:field="${usuario.email}" placeholder="Insira o E-mail">
+
+                    </div>
+
+                    <div>
+                        <input name="telefone" id="telefone" type="tel" th:field="${usuario.telefone}"
+                            placeholder="Insira seu telefone" maxlength="15">
+                    </div>
+
+
+
+                    <div>
+                        <select th:field="${usuario.curso}" class="selec" style="color: #4b4b4b;">
+                            <option value="">Selecione seu Curso...</option>
+                            <option th:each="p : ${cursos}" th:text="${p}" th:value="${p}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Senha -->
+                    <div>
+
+                        <input type="password" th:field="${usuario.senha}" placeholder="Insira a Senha">
+
+                    </div>
+
+                    <div>
+
+                        <input type="password" th:field="${usuario.senha2}" placeholder="Repita a Senha">
+
+                    </div>
+                    <!-- Senha -->
+
+                    <center>
+                        </br>
+                        <div>
+                            <input id='botao' type="submit" th:value="${usuario.id} == 0 ? Cadastrar : Editar"
+                                onclick="window.location.href='/usuarios/busca'">
+                            <input id='botao' type="submit" value="Cancelar" formaction="/" formmethod="get" />
+
+                    </center>
+                    </br>
+            </div>
+            </form>
+
+
+        </div>
+
+
+        <!-- CADASTRO -->
+
+        <!-- LOGIN -->
+        <div class="content second-content">
+            <div class="first-column">
+
+                <h2 class="title title-welcome">Olá!</h2>
+                <p class="description description-primary">Insira seus dados pessoais.</p>
+                <br />
+                <br />
+                <button id="signup" class="btn btn-primary">Voltar</button>
+            </div>
+            <div class="second-column">
+
+                <h2 class="title title-second">Login</h2>
+
+                <form name="formLogin" method="post" th:action="@{/usuarios/login}" class="form">
+
+                    <br />
+                    <label class="label-input">
+                        <input type="text" placeholder="Email" name="username" required autofocus />
+                    </label>
+
+                    <label class="label-input" for="">
+                        <input type="password" placeholder="Senha" name="password" required />
+                    </label>
+                    </br>
+                    </br>
+                    <input type="checkbox" name="remember-me"/> Lembrar-me <br/>
+                     </br>
+                    <button type="submit" id='botao'> Entrar </button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    <!-- LOGIN -->
+
+    <script>
+
+        /* Máscaras do telefone */
+        function mascara(o, f) {
+            v_obj = o
+            v_fun = f
+            setTimeout("execmascara()", 1)
+        }
+        function execmascara() {
+            v_obj.value = v_fun(v_obj.value)
+        }
+        function mtel(v) {
+            v = v.replace(/\D/g, ""); //Remove tudo o que não é dígito
+            v = v.replace(/^(\d{2})(\d)/g, "($1) $2"); //Coloca parênteses em volta dos dois primeiros dígitos
+            v = v.replace(/(\d)(\d{4})$/, "$1-$2"); //Coloca hífen entre o quarto e o quinto dígitos
+            return v;
+        }
+        function id(el) {
+            return document.getElementById(el);
+        }
+        window.onload = function () {
+            id('telefone').onkeyup = function () {
+                mascara(this, mtel);
+            }
+        }
+
+    </script>
+    <script type="text/javascript" src="/JavaScript/JS.js"></script>
+
+</body>
+
+
+</html>
